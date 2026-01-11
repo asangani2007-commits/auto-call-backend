@@ -9,20 +9,22 @@ const client = new twilio(accountSid, authToken);
 app.get('/make-call', (req, res) => {
     const toNumber = req.query.to;
     const audioUrl = req.query.audio; 
+    // એપમાંથી મોકલેલો ટેક્સ્ટ મેસેજ અંહી પકડશે, જો કઈ નહિ હોય તો "Jay Swaminarayan" બોલશે
+    const customMsg = req.query.msg || "Jay Swaminarayan"; 
     
     console.log("કોલ વિનંતી મળી:", toNumber);
 
-    // TwiML લોજિક
     let twimlResponse = `
         <Response>
-            <Say voice="alice" language="hi-IN">Jay Swaminarayan!</Say>
+            <Pause length="1"/>
+            
+            <Say voice="alice" language="hi-IN">${customMsg}</Say>
+            
             <Pause length="1"/>
             
             ${audioUrl && audioUrl.trim() !== "" ? `
                 <Play>${audioUrl}</Play>
-            ` : `
-                <Say voice="alice" language="hi-IN">Error! Recording file not found.</Say>
-            `}
+            ` : ""}
             
             <Pause length="1"/>
             <Hangup/>
